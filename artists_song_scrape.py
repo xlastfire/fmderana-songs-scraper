@@ -39,6 +39,7 @@ def scrape_artist_songs(page_url, name):
     print('##########################################################################################################')
 
     temp = 0
+    one_downloaded = False
     for song in song_links:
 
         song_attr = song.a['href']
@@ -59,7 +60,13 @@ def scrape_artist_songs(page_url, name):
         direct_link = PREFIX_URL + song_attr
         mp3_file = req.get(direct_link)
 
-        f = open(path, 'wb')
+        try:
+          f = open(path, 'wb')
+        except:
+          print('Something Error - ' + song_name)
+          index += 1
+          total_errors += 1
+          continue
         f.write(mp3_file.content)
         f.close()
         index += 1
@@ -68,13 +75,15 @@ def scrape_artist_songs(page_url, name):
         mb = round(size/1024/1024,2)
         total_size += mb
         if mb == 0.0:
-            total_errors += 1
+          total_errors += 1
         print(str(temp) + '. Downloaded - ' + song_name + ' (' + str(mb) + ' mb)')
+        one_downloaded = True
         total_songs += 1
-
-    interval = randint(3, 8)
-    print(f'\n           >>>>>>>>>>>>>>>>>>>>>>>>>>>> Waiting {interval}s for next artist <<<<<<<<<<<<<<<<<<<<<<<<<<<<')
-    sleep(interval)
+        
+    if one_downloaded:
+        interval = randint(3, 8)
+        print(f'\n           >>>>>>>>>>>>>>>>>>>>>>>>>>>> Waiting {interval}s for next artist <<<<<<<<<<<<<<<<<<<<<<<<<<<<')
+        sleep(interval)
 
 
 def scrape_artists():
