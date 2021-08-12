@@ -67,6 +67,8 @@ def scrape_artist_songs(page_url, name):
         size = os.path.getsize(path)
         mb = round(size/1024/1024,2)
         total_size += mb
+        if mb == 0.0:
+            total_errors += 1
         print(str(temp) + '. Downloaded - ' + song_name + ' (' + str(mb) + ' mb)')
         total_songs += 1
 
